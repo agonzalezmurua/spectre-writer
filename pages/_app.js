@@ -1,7 +1,14 @@
-import '../styles/globals.css'
+import "tailwindcss/tailwind.css";
+import { SWRConfig } from "swr";
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
+function RhymeApp({ Component, pageProps }) {
+  return (
+    <SWRConfig value={{ fetcher }}>
+      <Component {...pageProps} />
+    </SWRConfig>
+  );
 }
 
-export default MyApp
+export default RhymeApp;
