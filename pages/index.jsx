@@ -1,4 +1,4 @@
-import TextInput from "./components/molecules/TextInput";
+import TextInput from "../components/molecules/TextInput";
 
 export default function Home() {
   return (

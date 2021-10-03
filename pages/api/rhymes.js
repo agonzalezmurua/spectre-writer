@@ -1,4 +1,4 @@
-import datamuse from "../services/datamuse";
+import datamuse from "../../services/datamuse";
 
 export default async function (req, res) {
   const words = req.query.words;
