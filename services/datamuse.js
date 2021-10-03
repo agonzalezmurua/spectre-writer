@@ -3,11 +3,9 @@ import axios from "axios";
 const url = "https://api.datamuse.com/words";
 
 const datamuse = {
-  getRhymes: async function (word) {
+  ask: async function (params) {
     const response = await axios.get(url, {
-      params: {
-        rel_rhy: word,
-      },
+      params: params,
     });
     return response.data.map((word) => word.word);
   },
