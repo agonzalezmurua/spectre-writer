@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useMemo, useState } from "react";
+import { forwardRef, useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 
 import Input from "../atoms/Input";
@@ -33,22 +33,43 @@ const Suggestions = forwardRef((props, ref) => {
     return isReady() && rhymes === undefined;
   }, [isReady, rhymes]);
 
+  const handleWordChange = useCallback(
+    (event) => {
+      const newValue = event.target.value;
+      props.onChange && props.onChange(newValue);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [props.onChange]
+  );
+
   useEffect(() => {
-    if (props.text.length !== 0 && props.text !== word) {
+    if (props.text !== word) {
       setWord(props.text);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.text]);
 
+  useEffect(() => {
+    props.onRhymeLoad(rhymes || []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.onRhymeLoad, rhymes]);
+
   return (
     <section ref={ref} className="space-y-2 h-full flex flex-col">
-      <section className="flex space-x-4 items-center">
+      <section id="controls" className="flex space-x-4 items-center">
         <span className="flex-1">
-          <input
-            className="font-bold text-2xl w-full hover:border-gray-300"
-            value={word}
-            onChange={(e) => setWord(e.target.value)}
-          />
+          <section className="flex w-full items-center text-2xl">
+            <label className="font-bold" htmlFor="word">
+              Rhymes with&nbsp;
+            </label>
+            <input
+              id="word"
+              className="font-bold flex-1 hover:border-gray-300"
+              placeholder="word"
+              value={word}
+              onChange={handleWordChange}
+            />
+          </section>
           <section>
             <label className="font-bold" htmlFor="count">
               syllables:&nbsp;
@@ -111,7 +132,7 @@ const Suggestions = forwardRef((props, ref) => {
 
       <hr />
 
-      <section className="overflow-y-scroll flex flex-1">
+      <section id="rhymes" className="overflow-y-scroll flex flex-1">
         {isReady() === false || isLoading ? (
           <section className="flex-1 bg-gray-100 animate-pulse"> </section>
         ) : (

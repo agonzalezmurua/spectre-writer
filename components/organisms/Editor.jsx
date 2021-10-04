@@ -4,12 +4,15 @@ import useSynchronizeScroll from "../../hooks/useSynchronizeScroll";
 import useTextHighlight from "../../hooks/useTextHighlight";
 import Suggestions from "../molecules/Suggestions";
 import SyllableCounter from "../atoms/SyllableCounter";
+import Highlight from "../atoms/Highlight";
 
 const Editor = () => {
   const input = useRef();
   const counter = useRef();
+  const mark = useRef();
   const [text, setText] = useState("");
   const [word, setWord] = useState("");
+  const [rhymes, setRhymes] = useState([]);
   const handleWordChange = useCallback(
     (newValue) => {
       if (newValue.length !== 0 && newValue !== word) {
@@ -49,10 +52,17 @@ const Editor = () => {
     [handleWordChange]
   );
 
-  useSynchronizeScroll(input, {
-    mode: "scroll",
-    ref: counter,
-  });
+  useSynchronizeScroll(
+    input,
+    {
+      mode: "scroll",
+      ref: counter,
+    },
+    {
+      mode: "scroll",
+      ref: mark,
+    }
+  );
 
   useEffect(() => {
     handleWordChange(highlight.value);
@@ -60,20 +70,33 @@ const Editor = () => {
 
   return (
     <section className="w-full h-full flex flex-col relative">
-      <section className="w-full flex-1 flex h-4/6 rounded-md bg-gray-100 p-4">
+      <section className="relative w-full flex-1 flex h-4/6 rounded-md bg-gray-100 p-4">
         <SyllableCounter text={text} ref={counter} />
-        <textarea
-          name="song"
-          id="song"
-          placeholder="Start here..."
-          ref={input}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="flex-1 resize-none rounded-lg border shadow-md p-2 space-y-1"
-        />
+        <section className="relative flex-1 bg-white rounded-lg border shadow-md">
+          <Highlight
+            text={text}
+            highlight={rhymes}
+            selected={word}
+            ref={mark}
+          />
+          <textarea
+            name="song"
+            id="song"
+            placeholder="Start here..."
+            ref={input}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="bg-transparent z-10 h-full w-full p-2 resize-none space-y-1"
+          />
+        </section>
       </section>
       <section className="h-2/6 flex flex-col p-4 pl-16 shadow border-t">
-        <Suggestions text={word} delay={250} onEdit={setWord} />
+        <Suggestions
+          text={word}
+          delay={100}
+          onRhymeLoad={setRhymes}
+          onChange={setWord}
+        />
       </section>
     </section>
   );
