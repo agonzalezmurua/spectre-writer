@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useDebounce } from "react-use";
+import { useMemo } from "react";
 import useSWR from "swr";
 
 /**
@@ -7,27 +6,19 @@ import useSWR from "swr";
  * @returns {string[]}
  */
 const useRhymes = (options = { topics: "", synonyms: "" }) => {
-  const [query, setQuery] = useState({});
+  const query = useMemo(() => {
+    const search = new URLSearchParams({});
 
-  useDebounce(
-    () => {
-      const search = new URLSearchParams({});
+    Object.entries(options).forEach(([key, value]) => {
+      if (value) {
+        search.append(key, value);
+      }
+    });
 
-      Object.entries(options).forEach(([key, value]) => {
-        if (value) {
-          search.append(key, value);
-        }
-      });
+    return search;
+  }, [options]);
 
-      setQuery(search);
-    },
-    250,
-    [options]
-  );
-
-  const { data } = useSWR(`/api/rhymes?${query.toString()}`, {
-    fallbackData: [],
-  });
+  const { data } = useSWR(`/api/rhymes?${query.toString()}`);
 
   return data;
 };

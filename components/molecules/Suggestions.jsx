@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useState } from "react";
+import { forwardRef, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 
 import Input from "../atoms/Input";
@@ -7,35 +7,48 @@ import useSyllableCount from "../../hooks/useSyllableCount";
 
 // eslint-disable-next-line react/display-name
 const Suggestions = forwardRef((props, ref) => {
-  const [word, setWord] = useState(props.text);
+  const [word, setWord] = useState("");
+  const [debouncedWord, setDebouncedWord] = useState("");
   const [topics, setTopics] = useState("");
-  const [kind, setKind] = useState("rhy");
+  const [kind, setKind] = useState("nry");
   const [synonyms, setSynonyms] = useState("");
-  useDebounce(
-    () => {
-      setWord(props.text);
-    },
-    props.delay,
-    [props.text]
-  );
   const syllables = useSyllableCount(word);
   const rhymes = useRhymes({
-    [`rel_${kind}`]: word,
+    [`rel_${kind}`]: debouncedWord,
     topics: topics
       .split(",")
       .map((t) => t.trim())
       .join(","),
     rel_syn: synonyms,
   });
-  const hide = useMemo(() => props.text.length === 0, [props.text]);
+
+  const [isReady] = useDebounce(
+    () => {
+      setDebouncedWord(word);
+    },
+    props.delay,
+    [word]
+  );
+  const isLoading = useMemo(() => {
+    return isReady() && rhymes === undefined;
+  }, [isReady, rhymes]);
+
+  useEffect(() => {
+    if (props.text.length !== 0 && props.text !== word) {
+      setWord(props.text);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.text]);
 
   return (
-    <section ref={ref} className="rounded-lg p-2 h-2/6 flex flex-col space-y-2">
+    <section ref={ref} className="space-y-2 h-full flex flex-col">
       <section className="flex space-x-4 items-center">
         <span className="flex-1">
-          <h1 className="font-bold text-xl">
-            {`Rhymes with "${props.text}"` || "..."}
-          </h1>
+          <input
+            className="font-bold text-2xl w-full hover:border-gray-300"
+            value={word}
+            onChange={(e) => setWord(e.target.value)}
+          />
           <section>
             <label className="font-bold" htmlFor="count">
               syllables:&nbsp;
@@ -50,25 +63,25 @@ const Suggestions = forwardRef((props, ref) => {
           <section className="space-x-2">
             <input
               type="radio"
-              id="perfect"
-              value="rhy"
+              id="approximate"
+              value="nry"
               name="kind"
-              checked={kind === "rhy"}
+              defaultChecked={kind === "nry"}
               onClick={(e) => setKind(e.target.value)}
             />
-            <label htmlFor="perfect">Perfect</label>
+            <label htmlFor="approximate">Approximate</label>
           </section>
 
           <section className="space-x-2">
             <input
               type="radio"
-              id="approximate"
-              value="nry"
+              id="perfect"
+              value="rhy"
               name="kind"
-              checked={kind === "nry"}
+              defaultChecked={kind === "rhy"}
               onClick={(e) => setKind(e.target.value)}
             />
-            <label htmlFor="approximate">Approximate</label>
+            <label htmlFor="perfect">Perfect</label>
           </section>
         </fieldset>
 
@@ -98,8 +111,12 @@ const Suggestions = forwardRef((props, ref) => {
 
       <hr />
 
-      <section hidden={hide} className="overflow-y-scroll">
-        {rhymes.length === 0 ? "No results" : rhymes.join(", ")}
+      <section className="overflow-y-scroll flex flex-1">
+        {isReady() === false || isLoading ? (
+          <section className="flex-1 bg-gray-100 animate-pulse"> </section>
+        ) : (
+          <span>{rhymes.length === 0 ? "No results" : rhymes.join(", ")}</span>
+        )}
       </section>
     </section>
   );

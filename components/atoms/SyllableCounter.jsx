@@ -16,7 +16,7 @@ const SyllableCount = forwardRef((props, ref) => {
     <ul className="p-2 space-y-0 text-right w-12 overflow-hidden" ref={ref}>
       {computed.map(({ count, isEmpty }, index) => (
         <li key={index}>
-          {isEmpty ? <span className="text-gray-300">-</span> : count}
+          {isEmpty ? <span className="text-gray-400">-</span> : count}
         </li>
       ))}
     </ul>
