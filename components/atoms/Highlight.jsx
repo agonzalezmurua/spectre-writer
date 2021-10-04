@@ -3,7 +3,6 @@ import { useDebounce } from "react-use";
 import sanitize from "sanitize-html";
 
 function applyHighlights(text, { selected = "", highlight = [] }) {
-  console.log({ selected, highlight });
   const selectedRegex = new RegExp(`\\b${selected}\\b`, "gi");
   const highlightRegex = new RegExp(
     `${highlight.map((w) => `\\b${w}\\b`).join("|")}`,
