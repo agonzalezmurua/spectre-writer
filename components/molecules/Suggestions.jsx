@@ -64,7 +64,7 @@ const Suggestions = forwardRef((props, ref) => {
             </label>
             <input
               id="word"
-              className="font-bold flex-1 hover:border-gray-300"
+              className="font-bold flex-1"
               placeholder="word"
               value={word}
               onChange={handleWordChange}
@@ -134,7 +134,9 @@ const Suggestions = forwardRef((props, ref) => {
 
       <section id="rhymes" className="overflow-y-scroll flex flex-1">
         {isReady() === false || isLoading ? (
-          <section className="flex-1 bg-gray-100 animate-pulse"> </section>
+          <section className="flex-1 bg-gray-100 dark:bg-gray-700 animate-pulse">
+            {" "}
+          </section>
         ) : (
           <span>{rhymes.length === 0 ? "No results" : rhymes.join(", ")}</span>
         )}

@@ -1,4 +1,5 @@
 import "tailwindcss/tailwind.css";
+import "./app.css";
 import { SWRConfig } from "swr";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
