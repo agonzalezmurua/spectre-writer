@@ -92,7 +92,7 @@ const Editor = () => {
         </section>
       </section>
 
-      <Collapsible className="flex flex-col p-4 max-h-96 shadow border-t bg-white dark:bg-gray-900">
+      <Collapsible className="flex flex-col p-4 shadow border-t bg-white dark:bg-gray-900">
         <Suggestions
           text={word}
           delay={100}

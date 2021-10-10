@@ -21,7 +21,7 @@ const Collapsible = (props) => {
     <section {...props}>
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="text-center flex justify-center rounded w-full hover:bg-gray-100 dark:hover:bg-gray-800"
+        className="text-center py-2 flex justify-center rounded w-full hover:bg-gray-100 dark:hover:bg-gray-800"
       >
         {collapsed ? (
           <ChevronUp className="w-6" />

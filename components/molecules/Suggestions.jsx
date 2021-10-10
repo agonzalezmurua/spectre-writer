@@ -115,7 +115,7 @@ const Suggestions = (props, ref) => {
         </section>
       </section>
 
-      <hr className="border-gray-800" />
+      <hr className=" dark:border-gray-800" />
 
       <section
         id="rhymes"
@@ -150,7 +150,7 @@ const Suggestions = (props, ref) => {
             </section>
           </section>
         </fieldset>
-        <hr className="border-gray-800" />
+        <hr className="dark:border-gray-800" />
         {isReady() === false || isLoading ? (
           <section className="h-12 bg-gray-100 dark:bg-gray-700 animate-pulse">
             {" "}
