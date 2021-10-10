@@ -5,6 +5,7 @@ import useTextHighlight from "../../hooks/useTextHighlight";
 import Suggestions from "../molecules/Suggestions";
 import SyllableCounter from "../atoms/SyllableCounter";
 import Highlight from "../atoms/Highlight";
+import Collapsible from "../atoms/Collapsible";
 
 const Editor = () => {
   const input = useRef();
@@ -70,7 +71,7 @@ const Editor = () => {
 
   return (
     <section className="w-full h-full flex flex-col relative">
-      <section className="relative w-full flex-1 flex h-4/6 bg-gray-100 dark:bg-gray-800 p-4">
+      <section className="relative w-full flex-1 flex bg-gray-100 dark:bg-gray-800 p-4">
         <SyllableCounter text={text} ref={counter} />
         <section className="relative flex-1 rounded-lg border shadow-md focus:outline-none">
           <Highlight
@@ -90,14 +91,15 @@ const Editor = () => {
           />
         </section>
       </section>
-      <section className="h-2/6 flex flex-col p-4 pl-16 shadow border-t bg-white dark:bg-gray-900">
+
+      <Collapsible className="flex flex-col p-4 max-h-96 shadow border-t bg-white dark:bg-gray-900">
         <Suggestions
           text={word}
           delay={100}
           onRhymeLoad={setRhymes}
           onChange={setWord}
         />
-      </section>
+      </Collapsible>
     </section>
   );
 };

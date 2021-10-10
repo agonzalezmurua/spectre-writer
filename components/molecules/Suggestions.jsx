@@ -6,7 +6,7 @@ import useRhymes from "../../hooks/useRhymes";
 import useSyllableCount from "../../hooks/useSyllableCount";
 
 // eslint-disable-next-line react/display-name
-const Suggestions = forwardRef((props, ref) => {
+const Suggestions = (props, ref) => {
   const [word, setWord] = useState("");
   const [debouncedWord, setDebouncedWord] = useState("");
   const [topics, setTopics] = useState("");
@@ -55,86 +55,104 @@ const Suggestions = forwardRef((props, ref) => {
   }, [props.onRhymeLoad, rhymes]);
 
   return (
-    <section ref={ref} className="space-y-2 h-full flex flex-col">
-      <section id="controls" className="flex space-x-4 items-center">
-        <span className="flex-1">
-          <section className="flex w-full items-center text-2xl">
+    <section ref={ref} className="space-y-3 flex flex-col">
+      <section
+        id="controls"
+        className="flex flex-col lg:flex-row items-start justify-between space-y-2"
+      >
+        <section
+          id="controls-word"
+          className="flex flex-col flex-auto space-y-2 w-full"
+        >
+          <section id="controls-word-input" className="text-2xl">
             <label className="font-bold" htmlFor="word">
               Rhymes with&nbsp;
             </label>
             <input
               id="word"
-              className="font-bold flex-1"
+              className="font-bold flex-grow text-blue-500"
               placeholder="word"
               value={word}
               onChange={handleWordChange}
             />
           </section>
-          <section>
+          <section id="controls-word-syllable_count">
             <label className="font-bold" htmlFor="count">
               syllables:&nbsp;
             </label>
             <span id="count">{syllables}</span>
           </section>
-        </span>
+        </section>
 
-        <fieldset className="flex items-center space-x-2">
-          <legend>Search method</legend>
+        <section id="controls-context" className="w-full">
+          <fieldset>
+            <legend className="font-bold">Filters</legend>
 
-          <section className="space-x-2">
-            <input
-              type="radio"
-              id="approximate"
-              value="nry"
-              name="kind"
-              defaultChecked={kind === "nry"}
-              onClick={(e) => setKind(e.target.value)}
-            />
-            <label htmlFor="approximate">Approximate</label>
-          </section>
+            <section className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
+              <section className="space-y-1 md:flex md:space-x-2 md:items-center">
+                <label htmlFor="topics">Topics</label>
+                <Input
+                  id="topics"
+                  type="text"
+                  value={topics}
+                  placeholder="temperature, sports"
+                  onChange={(e) => setTopics(e.target.value)}
+                />
+              </section>
 
-          <section className="space-x-2">
-            <input
-              type="radio"
-              id="perfect"
-              value="rhy"
-              name="kind"
-              defaultChecked={kind === "rhy"}
-              onClick={(e) => setKind(e.target.value)}
-            />
-            <label htmlFor="perfect">Perfect</label>
-          </section>
-        </fieldset>
-
-        <fieldset className="flex space-x-2">
-          <legend>Filters</legend>
-          <section className="space-x-1">
-            <label htmlFor="topics">Topics</label>
-            <Input
-              id="topics"
-              value={topics}
-              placeholder="temperature,sports"
-              onChange={(e) => setTopics(e.target.value)}
-            />
-          </section>
-
-          <section className="space-x-1">
-            <label htmlFor="synonyms">Synonyms</label>
-            <Input
-              id="synonyms"
-              value={synonyms}
-              placeholder="life,beach"
-              onChange={(e) => setSynonyms(e.target.value)}
-            />
-          </section>
-        </fieldset>
+              <section className="space-y-1 md:flex md:space-x-2 md:items-center">
+                <label htmlFor="synonyms">Synonyms</label>
+                <Input
+                  id="synonyms"
+                  value={synonyms}
+                  type="text"
+                  placeholder="life, beach"
+                  onChange={(e) => setSynonyms(e.target.value)}
+                />
+              </section>
+            </section>
+          </fieldset>
+        </section>
       </section>
 
-      <hr />
+      <hr className="border-gray-800" />
 
-      <section id="rhymes" className="overflow-y-scroll flex flex-1">
+      <section
+        id="rhymes"
+        className="overflow-y-scroll flex flex-col space-y-2"
+      >
+        <fieldset>
+          <legend className="font-bold">Search method</legend>
+
+          <section className="flex flex-col md:flex-row md:space-x-2 place-self-center">
+            <section className="space-x-1">
+              <input
+                type="radio"
+                id="approximate"
+                value="nry"
+                name="kind"
+                defaultChecked={kind === "nry"}
+                onClick={(e) => setKind(e.target.value)}
+              />
+              <label htmlFor="approximate">Approximate</label>
+            </section>
+
+            <section className="space-x-1">
+              <input
+                type="radio"
+                id="perfect"
+                value="rhy"
+                name="kind"
+                defaultChecked={kind === "rhy"}
+                onClick={(e) => setKind(e.target.value)}
+              />
+              <label htmlFor="perfect">Perfect</label>
+            </section>
+          </section>
+        </fieldset>
+        <hr className="border-gray-800" />
         {isReady() === false || isLoading ? (
-          <section className="flex-1 bg-gray-100 dark:bg-gray-700 animate-pulse">
+          <section className="h-12 bg-gray-100 dark:bg-gray-700 animate-pulse">
             {" "}
           </section>
         ) : (
@@ -143,11 +161,11 @@ const Suggestions = forwardRef((props, ref) => {
       </section>
     </section>
   );
-});
+};
 
 Suggestions.defaultProps = {
   delay: 1000,
   text: "",
 };
 
-export default Suggestions;
+export default forwardRef(Suggestions);

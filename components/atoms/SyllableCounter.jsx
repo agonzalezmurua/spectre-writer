@@ -2,7 +2,7 @@ import { forwardRef, useMemo } from "react";
 import { syllable } from "syllable";
 
 // eslint-disable-next-line react/display-name
-const SyllableCount = forwardRef((props, ref) => {
+const SyllableCount = (props, ref) => {
   const computed = useMemo(() => {
     const lines = props.text.split(/\n/gm);
 
@@ -13,7 +13,10 @@ const SyllableCount = forwardRef((props, ref) => {
   }, [props.text]);
 
   return (
-    <ul className="p-2 space-y-0 text-right w-12 overflow-hidden" ref={ref}>
+    <ul
+      className="pt-2 pr-2 space-y-0 text-right md:w-12 overflow-hidden"
+      ref={ref}
+    >
       {computed.map(({ count, isEmpty }, index) => (
         <li key={index}>
           {isEmpty ? <span className="text-gray-400">-</span> : count}
@@ -21,6 +24,6 @@ const SyllableCount = forwardRef((props, ref) => {
       ))}
     </ul>
   );
-});
+};
 
-export default SyllableCount;
+export default forwardRef(SyllableCount);
