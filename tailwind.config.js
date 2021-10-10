@@ -8,6 +8,12 @@ module.exports = {
       colors: {
         gray: colors.trueGray,
       },
+      maxHeight: {
+        0: "0",
+        "1/3": "33.33333333%",
+        "2/3": "66.66666666%",
+        full: "100%",
+      },
     },
   },
   variants: {

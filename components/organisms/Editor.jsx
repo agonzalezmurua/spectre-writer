@@ -16,7 +16,7 @@ const Editor = () => {
   const [rhymes, setRhymes] = useState([]);
   const handleWordChange = useCallback(
     (newValue) => {
-      if (newValue.length !== 0 && newValue !== word) {
+      if (newValue.trim().length !== 0 && newValue !== word) {
         setWord(newValue);
       }
     },
@@ -35,7 +35,6 @@ const Editor = () => {
       let startingIndex = endingIndex && endingIndex - 1;
 
       while (startingIndex > -1) {
-        const char = value[startingIndex];
         if (regex.test(value[startingIndex])) {
           ++startingIndex;
           break;
@@ -53,27 +52,17 @@ const Editor = () => {
     [handleWordChange]
   );
 
-  useSynchronizeScroll(
-    input,
-    {
-      mode: "scroll",
-      ref: counter,
-    },
-    {
-      mode: "scroll",
-      ref: mark,
-    }
-  );
+  useSynchronizeScroll(input, counter, mark);
 
   useEffect(() => {
     handleWordChange(highlight.value);
-  }, [highlight.value, handleWordChange]);
+  }, [highlight, handleWordChange]);
 
   return (
-    <section className="w-full h-full flex flex-col relative">
-      <section className="relative w-full flex-1 flex bg-gray-100 dark:bg-gray-800 p-4">
+    <section className="flex flex-col h-full">
+      <section className="flex flex-grow bg-gray-100 dark:bg-gray-800 p-4 pl-0 overflow-hidden">
         <SyllableCounter text={text} ref={counter} />
-        <section className="relative flex-1 rounded-lg border border-gray-300 dark:border-gray-500 shadow-md focus:outline-none">
+        <section className="leading-6 bg-white dark:bg-gray-900 relative rounded-lg border flex-grow border-gray-300 dark:border-gray-500 shadow-md focus:outline-none ">
           <Highlight
             text={text}
             highlight={rhymes}
@@ -87,17 +76,17 @@ const Editor = () => {
             ref={input}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="bg-transparent bg-white dark:bg-gray-900 z-10 h-full w-full p-2 resize-none space-y-1 rounded-lg"
+            className="bg-transparent z-10 h-full w-full p-2 resize-none rounded-lg"
           />
         </section>
       </section>
-
-      <Collapsible className="flex flex-col p-4 shadow border-t bg-white  dark:border-gray-500 dark:bg-gray-900">
+      <Collapsible className="flex flex-col max-h-full lg:max-h-2/3 p-4 shadow border-t bg-white  dark:border-gray-500 dark:bg-gray-900">
         <Suggestions
           text={word}
-          delay={100}
+          delay={200}
           onRhymeLoad={setRhymes}
           onChange={setWord}
+          startCollapsed={true}
         />
       </Collapsible>
     </section>

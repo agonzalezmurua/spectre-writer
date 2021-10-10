@@ -26,7 +26,7 @@ function applyHighlights(text, { selected = "", highlight = [] }) {
   return html;
 }
 
-const Highlight = (props, ref) => {
+function Highlight(props, ref) {
   const [state, setState] = useState({
     text: props.text,
     selected: props.selected,
@@ -41,7 +41,7 @@ const Highlight = (props, ref) => {
         highlight: props.highlight,
       });
     },
-    100,
+    200,
     [props.selected, props.highlight, props.text]
   );
 
@@ -86,21 +86,19 @@ const Highlight = (props, ref) => {
     <section
       id="backdrop"
       ref={ref}
-      className="absolute p-2 overflow-y-scroll pointer-events-none"
+      className="absolute p-2 overflow-y-scroll pointer-events-none z-0"
+      {...props}
     >
-      <div
-        id="highlight"
-        className="whitespace-pre-wrap text-transparent"
-        style={{ wordWrap: "break-word" }}
-        dangerouslySetInnerHTML={{ __html: html }}
-      ></div>
+      <div id="highlight" dangerouslySetInnerHTML={{ __html: html }}></div>
     </section>
   );
-};
+}
 
 Highlight.defaultProps = {
   selected: "",
   highlight: [],
 };
 
-export default forwardRef(Highlight);
+Highlight = forwardRef(Highlight);
+
+export default Highlight;

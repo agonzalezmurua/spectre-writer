@@ -31,7 +31,7 @@ const useTextHighlight = (element) => {
      * @returns
      */
     function handleMouseUp(event) {
-      const text = getSelectedText();
+      const text = getSelectedText().trim();
 
       setState({
         value: text,

@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 /**
  *
  * @param {React.MutableRefObject<HTMLElement>} anchor
- * @param {...{ ref: React.MutableRefObject<HTMLElement>, mode: "scroll" | "position" }} dependents
+ * @param {...React.MutableRefObject<HTMLElement>} dependents
  * @returns
  */
 const useSynchronizeScroll = (anchor, ...dependents) => {
@@ -17,7 +17,7 @@ const useSynchronizeScroll = (anchor, ...dependents) => {
     function sync() {
       const top = element.scrollTop;
 
-      for (const { mode, ref } of dependents) {
+      for (const ref of dependents) {
         if (!ref.current) {
           return;
         }

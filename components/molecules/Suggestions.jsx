@@ -6,7 +6,7 @@ import useRhymes from "../../hooks/useRhymes";
 import useSyllableCount from "../../hooks/useSyllableCount";
 
 // eslint-disable-next-line react/display-name
-const Suggestions = (props, ref) => {
+function Suggestions(props, ref) {
   const [word, setWord] = useState("");
   const [debouncedWord, setDebouncedWord] = useState("");
   const [topics, setTopics] = useState("");
@@ -30,7 +30,7 @@ const Suggestions = (props, ref) => {
     [word]
   );
   const isLoading = useMemo(() => {
-    return isReady() && rhymes === undefined;
+    return isReady() === true && rhymes !== undefined;
   }, [isReady, rhymes]);
 
   const handleWordChange = useCallback(
@@ -55,37 +55,58 @@ const Suggestions = (props, ref) => {
   }, [props.onRhymeLoad, rhymes]);
 
   return (
-    <section ref={ref} className="space-y-3 flex flex-col pt-2">
+    <section ref={ref} className="space-y-4 flex flex-col pt-2">
       <section
         id="controls"
         className="flex flex-col lg:flex-row items-start justify-between space-y-2"
       >
-        <section
-          id="controls-word"
-          className="flex flex-col flex-auto space-y-2 w-full"
-        >
+        <section id="controls-word" className="flex space-y-2 lg:w-1/2">
           <section id="controls-word-input" className="text-2xl">
             <label className="font-bold" htmlFor="word">
               Rhymes with&nbsp;
             </label>
             <input
               id="word"
-              className="font-bold flex-grow text-blue-500 rounded"
+              className="font-bold flex-grow w-full text-blue-500 rounded"
               placeholder="word"
               value={word}
               onChange={handleWordChange}
             />
           </section>
-          <section id="controls-word-syllable_count">
-            <label className="font-bold" htmlFor="count">
-              syllables:&nbsp;
-            </label>
-            <span id="count">{syllables}</span>
-          </section>
         </section>
 
-        <section id="controls-context" className="w-full">
-          <fieldset>
+        <section id="controls-context" className="flex w-full lg:w-1/2">
+          <fieldset className="flex-1">
+            <legend className="font-bold">Search method</legend>
+
+            <section className="flex flex-col md:flex-row md:space-x-2 place-self-center">
+              <section className="space-x-1">
+                <input
+                  type="radio"
+                  id="approximate"
+                  value="nry"
+                  name="kind"
+                  defaultChecked={kind === "nry"}
+                  onClick={(e) => setKind(e.target.value)}
+                />
+                <label htmlFor="approximate">Approximate</label>
+              </section>
+
+              <section className="space-x-1">
+                <input
+                  type="radio"
+                  id="perfect"
+                  value="rhy"
+                  name="kind"
+                  defaultChecked={kind === "rhy"}
+                  onClick={(e) => setKind(e.target.value)}
+                />
+                <label htmlFor="perfect">Perfect</label>
+              </section>
+            </section>
+          </fieldset>
+
+          <fieldset className="flex-1">
             <legend className="font-bold">Filters</legend>
 
             <section className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
@@ -121,37 +142,13 @@ const Suggestions = (props, ref) => {
         id="rhymes"
         className="overflow-y-scroll flex flex-col space-y-2"
       >
-        <fieldset>
-          <legend className="font-bold">Search method</legend>
-
-          <section className="flex flex-col md:flex-row md:space-x-2 place-self-center">
-            <section className="space-x-1">
-              <input
-                type="radio"
-                id="approximate"
-                value="nry"
-                name="kind"
-                defaultChecked={kind === "nry"}
-                onClick={(e) => setKind(e.target.value)}
-              />
-              <label htmlFor="approximate">Approximate</label>
-            </section>
-
-            <section className="space-x-1">
-              <input
-                type="radio"
-                id="perfect"
-                value="rhy"
-                name="kind"
-                defaultChecked={kind === "rhy"}
-                onClick={(e) => setKind(e.target.value)}
-              />
-              <label htmlFor="perfect">Perfect</label>
-            </section>
-          </section>
-        </fieldset>
-        <hr className="dark:border-gray-800" />
-        {isReady() === false || isLoading ? (
+        <section id="controls-word-syllable_count">
+          <label className="font-bold" htmlFor="count">
+            syllables:&nbsp;
+          </label>
+          <span id="count">{syllables}</span>
+        </section>
+        {isLoading === false ? (
           <section className="h-12 bg-gray-100 dark:bg-gray-700 animate-pulse">
             {" "}
           </section>
@@ -161,11 +158,13 @@ const Suggestions = (props, ref) => {
       </section>
     </section>
   );
-};
+}
 
 Suggestions.defaultProps = {
   delay: 1000,
   text: "",
 };
 
-export default forwardRef(Suggestions);
+Suggestions = forwardRef(Suggestions);
+
+export default Suggestions;

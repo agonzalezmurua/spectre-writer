@@ -1,21 +1,31 @@
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ChevronUp from "@heroicons/react/outline/ChevronUpIcon";
 import ChevronDown from "@heroicons/react/outline/ChevronDownIcon";
 
-const Collapsible = (props) => {
+const Collapsible = ({ startCollapsed, ...props }) => {
   const content = useRef();
-  const [collapsed, setCollapsed] = useState(true);
-  const style = useMemo(() => {
+  const [collapsed, setCollapsed] = useState(startCollapsed);
+  const update = useCallback(() => {
     if (collapsed) {
-      return {
-        maxHeight: 0,
-      };
+      content.current.style.maxHeight = "0px";
     } else {
-      return {
-        maxHeight: content.current.scrollHeight,
-      };
+      content.current.style.maxHeight = content.current.scrollHeight + "px";
     }
   }, [collapsed]);
+
+  useEffect(() => {
+    update();
+  }, [update]);
+
+  useEffect(() => {
+    if (!content.current) {
+      return null;
+    }
+
+    window.addEventListener("resize", update);
+
+    return () => window.removeEventListener("resize", update);
+  }, [update]);
 
   return (
     <section {...props}>
@@ -30,7 +40,6 @@ const Collapsible = (props) => {
         )}
       </button>
       <section
-        style={style}
         className="overflow-hidden transition-all duration-200"
         ref={content}
       >
@@ -38,6 +47,10 @@ const Collapsible = (props) => {
       </section>
     </section>
   );
+};
+
+Collapsible.defaultProps = {
+  startCollapsed: false,
 };
 
 export default Collapsible;
