@@ -1,16 +1,20 @@
 import { forwardRef, useCallback, useEffect, useMemo, useState } from "react";
-import { useDebounce } from "react-use";
+import { useDebounce, useKey } from "react-use";
 
 import Input from "../atoms/Input";
 import useRhymes from "../../hooks/useRhymes";
 import useSyllableCount from "../../hooks/useSyllableCount";
 
-// eslint-disable-next-line react/display-name
+const KINDS = {
+  PERFECT: "rhy",
+  APPROX: "nry",
+};
+
 function Suggestions(props, ref) {
   const [word, setWord] = useState("");
   const [debouncedWord, setDebouncedWord] = useState("");
   const [topics, setTopics] = useState("");
-  const [kind, setKind] = useState("nry");
+  const [kind, setKind] = useState(KINDS.APPROX);
   const [synonyms, setSynonyms] = useState("");
   const syllables = useSyllableCount(word);
   const rhymes = useRhymes({
@@ -40,6 +44,27 @@ function Suggestions(props, ref) {
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [props.onChange]
+  );
+
+  useKey(
+    "Tab",
+    (event) => {
+      event.preventDefault();
+      const entries = Object.entries(KINDS);
+      let index = entries.findIndex(([, value]) => kind === value);
+
+      if (index + 1 === entries.length) {
+        index = 0;
+      } else {
+        index++;
+      }
+
+      const [, value] = entries[index];
+
+      setKind(value);
+    },
+    { event: "keydown" },
+    [kind]
   );
 
   useEffect(() => {
@@ -84,10 +109,10 @@ function Suggestions(props, ref) {
                 <input
                   type="radio"
                   id="approximate"
-                  value="nry"
                   name="kind"
-                  defaultChecked={kind === "nry"}
-                  onClick={(e) => setKind(e.target.value)}
+                  value={KINDS.APPROX}
+                  checked={kind === KINDS.APPROX}
+                  onChange={(e) => setKind(e.target.value)}
                 />
                 <label htmlFor="approximate">Approximate</label>
               </section>
@@ -96,10 +121,10 @@ function Suggestions(props, ref) {
                 <input
                   type="radio"
                   id="perfect"
-                  value="rhy"
+                  value={KINDS.PERFECT}
                   name="kind"
-                  defaultChecked={kind === "rhy"}
-                  onClick={(e) => setKind(e.target.value)}
+                  checked={kind === KINDS.PERFECT}
+                  onChange={(e) => setKind(e.target.value)}
                 />
                 <label htmlFor="perfect">Perfect</label>
               </section>
@@ -138,23 +163,25 @@ function Suggestions(props, ref) {
 
       <hr className="dark:border-gray-800" />
 
-      <section
-        id="rhymes"
-        className="overflow-y-scroll flex flex-col space-y-2"
-      >
+      <section id="rhymes" className="flex flex-col space-y-2">
         <section id="controls-word-syllable_count">
           <label className="font-bold" htmlFor="count">
             syllables:&nbsp;
           </label>
           <span id="count">{syllables}</span>
         </section>
-        {isLoading === false ? (
-          <section className="h-12 bg-gray-100 dark:bg-gray-700 animate-pulse">
-            {" "}
-          </section>
-        ) : (
-          <span>{rhymes.length === 0 ? "No results" : rhymes.join(", ")}</span>
-        )}
+
+        <section className="h-60 md:h-30 lg:h-60 overflow-y-scroll">
+          {isLoading === false ? (
+            <section className="h-full bg-gray-100 dark:bg-gray-700 animate-pulse">
+              {" "}
+            </section>
+          ) : rhymes.length === 0 ? (
+            "No results"
+          ) : (
+            rhymes.join(", ")
+          )}
+        </section>
       </section>
     </section>
   );
