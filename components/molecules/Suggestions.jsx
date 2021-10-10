@@ -115,7 +115,7 @@ const Suggestions = (props, ref) => {
         </section>
       </section>
 
-      <hr className=" dark:border-gray-800" />
+      <hr className="dark:border-gray-800" />
 
       <section
         id="rhymes"
