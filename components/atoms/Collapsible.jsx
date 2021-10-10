@@ -39,10 +39,7 @@ const Collapsible = ({ startCollapsed, ...props }) => {
           <ChevronDown className="w-6" />
         )}
       </button>
-      <section
-        className="overflow-hidden transition-all duration-200"
-        ref={content}
-      >
+      <section className="transition-all duration-200" ref={content}>
         {props.children}
       </section>
     </section>

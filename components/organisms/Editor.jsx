@@ -9,6 +9,7 @@ import Collapsible from "../atoms/Collapsible";
 const Editor = () => {
   const input = useRef();
   const counter = useRef();
+  const [rhymes, setRhymes] = useState([]);
   const [text, setText] = useState("");
   const [word, setWord] = useState("");
   const handleWordChange = useCallback(
@@ -71,10 +72,14 @@ const Editor = () => {
           />
         </section>
       </section>
-      <Collapsible className="flex flex-col max-h-full lg:max-h-2/3 p-4 shadow border-t bg-white  dark:border-gray-500 dark:bg-gray-900">
+      <Collapsible
+        className="flex flex-col max-h-full lg:max-h-2/3 p-4 shadow border-t bg-white  dark:border-gray-500 dark:bg-gray-900"
+        updateOn={[rhymes]}
+      >
         <Suggestions
           text={word}
           delay={200}
+          onRhymeLoad={setRhymes}
           onChange={setWord}
           startCollapsed={true}
         />
