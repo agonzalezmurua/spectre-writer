@@ -4,16 +4,13 @@ import useSynchronizeScroll from "../../hooks/useSynchronizeScroll";
 import useTextHighlight from "../../hooks/useTextHighlight";
 import Suggestions from "../molecules/Suggestions";
 import SyllableCounter from "../atoms/SyllableCounter";
-import Highlight from "../atoms/Highlight";
 import Collapsible from "../atoms/Collapsible";
 
 const Editor = () => {
   const input = useRef();
   const counter = useRef();
-  const mark = useRef();
   const [text, setText] = useState("");
   const [word, setWord] = useState("");
-  const [rhymes, setRhymes] = useState([]);
   const handleWordChange = useCallback(
     (newValue) => {
       if (newValue.trim().length !== 0 && newValue !== word) {
@@ -52,7 +49,7 @@ const Editor = () => {
     [handleWordChange]
   );
 
-  useSynchronizeScroll(input, counter, mark);
+  useSynchronizeScroll(input, counter);
 
   useEffect(() => {
     handleWordChange(highlight.value);
@@ -62,13 +59,7 @@ const Editor = () => {
     <section className="flex flex-col h-full">
       <section className="flex flex-grow bg-gray-100 dark:bg-gray-800 p-4 pl-0 overflow-hidden">
         <SyllableCounter text={text} ref={counter} />
-        <section className="leading-6 bg-white dark:bg-gray-900 relative rounded-lg border flex-grow border-gray-300 dark:border-gray-500 shadow-md focus:outline-none ">
-          <Highlight
-            text={text}
-            highlight={rhymes}
-            selected={word}
-            ref={mark}
-          />
+        <section className="leading-6 bg-white dark:bg-gray-900 relative rounded-lg border flex-grow border-gray-300 dark:border-gray-500 shadow-md focus:outline-none">
           <textarea
             name="song"
             id="song"
@@ -84,7 +75,6 @@ const Editor = () => {
         <Suggestions
           text={word}
           delay={200}
-          onRhymeLoad={setRhymes}
           onChange={setWord}
           startCollapsed={true}
         />

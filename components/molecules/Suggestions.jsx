@@ -50,7 +50,7 @@ function Suggestions(props, ref) {
   }, [props.text]);
 
   useEffect(() => {
-    props.onRhymeLoad(rhymes || []);
+    props.onRhymeLoad && props.onRhymeLoad(rhymes || []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.onRhymeLoad, rhymes]);
 
