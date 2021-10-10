@@ -55,7 +55,7 @@ const Suggestions = (props, ref) => {
   }, [props.onRhymeLoad, rhymes]);
 
   return (
-    <section ref={ref} className="space-y-3 flex flex-col">
+    <section ref={ref} className="space-y-3 flex flex-col pt-2">
       <section
         id="controls"
         className="flex flex-col lg:flex-row items-start justify-between space-y-2"
@@ -70,7 +70,7 @@ const Suggestions = (props, ref) => {
             </label>
             <input
               id="word"
-              className="font-bold flex-grow text-blue-500"
+              className="font-bold flex-grow text-blue-500 rounded"
               placeholder="word"
               value={word}
               onChange={handleWordChange}

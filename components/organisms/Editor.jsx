@@ -73,7 +73,7 @@ const Editor = () => {
     <section className="w-full h-full flex flex-col relative">
       <section className="relative w-full flex-1 flex bg-gray-100 dark:bg-gray-800 p-4">
         <SyllableCounter text={text} ref={counter} />
-        <section className="relative flex-1 rounded-lg border shadow-md focus:outline-none">
+        <section className="relative flex-1 rounded-lg border border-gray-500 shadow-md focus:outline-none">
           <Highlight
             text={text}
             highlight={rhymes}
@@ -87,12 +87,12 @@ const Editor = () => {
             ref={input}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="bg-transparent dark:bg-gray-900 z-10 h-full w-full p-2 resize-none space-y-1 rounded-lg"
+            className="bg-transparent bg-white dark:bg-gray-900 z-10 h-full w-full p-2 resize-none space-y-1 rounded-lg"
           />
         </section>
       </section>
 
-      <Collapsible className="flex flex-col p-4 shadow border-t bg-white dark:bg-gray-900">
+      <Collapsible className="flex flex-col p-4 shadow border-t border-gray-500 bg-white dark:bg-gray-900">
         <Suggestions
           text={word}
           delay={100}
